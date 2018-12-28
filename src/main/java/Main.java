@@ -104,7 +104,7 @@ public class Main {
      * This function is used to get date from file name, it checks if day or month or hour is single digit and converts it to two number digit
      * and returns String in format dd/MM/yyyy HH-mm-ss.
      *
-     * @param file File process to extract date
+     * @param file File to process to extract date
      * @return String formatted date
      */
     private static String getTimeFromFile(File file) {
