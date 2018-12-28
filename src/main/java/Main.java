@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,11 +15,12 @@ public class Main {
 
     private static int imageWidth;
     private static int imageHeight;
-    //41.996532 21.431313
+
     private static double lat = 41.996480;
     private static double lng = 21.431325;
 
-    private static int zoom = 16; //TODO maybe not 16
+    //TODO maybe not 16
+    private static int zoom = 16;
 
     private static List<LatLngModel> latLngModels = new ArrayList<LatLngModel>();
 
@@ -47,13 +47,21 @@ public class Main {
                 }
             }
             hashMap.put("latlnglist", latLngModels);
-            FileWriter fileWriter = new FileWriter("/home/martin/IdeaProjects/LatLngImage/src/main/java/latlngtime.json");
-            fileWriter.write(new Gson().toJson(hashMap));
-            fileWriter.flush();
+
+            writeLatLngToJsonFile(hashMap);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void writeLatLngToJsonFile(HashMap<String, Object> hashMap) throws IOException {
+
+        FileWriter fileWriter = new FileWriter("/home/martin/IdeaProjects/LatLngImage/src/main/java/latlngtime.json");
+        fileWriter.write(new Gson().toJson(hashMap));
+        fileWriter.flush();
+        fileWriter.close();
+
     }
 
     private static void getLatLong(int x, int y, BufferedImage bufferedImage) {
@@ -92,6 +100,13 @@ public class Main {
 
     }
 
+    /**
+     * This function is used to get date from file name, it checks if day or month or hour is single digit and converts it to two number digit
+     * and returns String in format dd/MM/yyyy HH-mm-ss.
+     *
+     * @param file File process to extract date
+     * @return String formatted date
+     */
     private static String getTimeFromFile(File file) {
 
         String formattedDate = null;
@@ -104,6 +119,7 @@ public class Main {
         String[] digits = file.getName().substring(3, file.getName().length() - 8).replaceAll("[^\\d_]", "").split("");
 
         int digitsCount = 0;
+
         while (digitsCount <= digits.length - 1) {
             if (digitsCount + 1 <= digits.length - 1) {
                 if (digits[digitsCount].matches("\\d+") && !digits[digitsCount + 1].matches("\\d+")) {
